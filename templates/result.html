@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成結果</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #fafafa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: auto;
+            padding: 16px;
+        }
+
+        img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: auto;
+        }
+
+        /* タブ */
+        .tab-wrapper {
+            display: flex;
+            margin-top: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            background: orange;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* コンテンツ */
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-top: none;
+            background: white;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007BFF;
+        }
+
+        .preserve-newline {
+        white-space: pre-wrap;
+    }
+    </style>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+            document.getElementById("tab-" + tabName).classList.add("active");
+            document.getElementById("content-" + tabName).classList.add("active");
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>生成結果</h1>
+
+        {% if img_path %}
+        <img src="{{ url_for('serve_image', filename=img_path) }}">
+        {% endif %}
+
+        <!-- タブ -->
+        <div class="tab-wrapper">
+            <div id="tab-nickname" class="tab active" onclick="switchTab('nickname')">ニックネーム</div>
+            <div id="tab-feature" class="tab" onclick="switchTab('feature')">特徴</div>
+            <div id="tab-example" class="tab" onclick="switchTab('example')">例え</div>
+        </div>
+
+        <!-- コンテンツ -->
+        <div id="content-nickname" class="tab-content active">
+            <h2>ニックネーム</h2>
+            <p class="preserve-newline">{{ nickname }}</p>
+        </div>
+
+        <div id="content-feature" class="tab-content">
+            <h2>特徴</h2>
+            <p class="preserve-newline">{{ feature }}</p>
+        </div>
+
+        <div id="content-example" class="tab-content">
+            <h2>例え</h2>
+            <p class="preserve-newline">{{ example }}</p>
+        </div>
+
+        <a href="{{ url_for('index') }}">← 戻る</a>
+
+    </div>
+</body>
+</html>

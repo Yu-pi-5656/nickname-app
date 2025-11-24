@@ -1,0 +1,6 @@
+flask
+gunicorn
+pillow
+torch
+transformers
+accelerate

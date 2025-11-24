@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIニックネーム生成</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        function checkInput() {
+            const image = document.getElementById("image").value;
+            const name = document.getElementById("name").value;
+            const furigana = document.getElementById("furigana").value;
+            const button = document.getElementById("generate-btn");
+
+            if (image && name && furigana) {
+                button.disabled = false;
+                button.classList.add("active");
+            } else {
+                button.disabled = true;
+                button.classList.remove("active");
+            }
+        }
+
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AIニックネーム生成</h1>
+
+        <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+            <label>画像をアップロード（必須）</label><br>
+            <input type="file" name="image" id="image" accept="image/*" onchange="checkInput()"><br><br>
+
+            <label>名前（必須）</label><br>
+            <input type="text" name="name" id="name" oninput="checkInput()"><br><br>
+
+            <label>ふりがな（必須）</label><br>
+            <input type="text" name="furigana" id="furigana" oninput="checkInput()"><br><br>
+
+            <label>自由記入欄</label><br>
+            <textarea name="extra_info" rows="3" placeholder="例（趣味：散歩　好きな食べ物：寿司）"></textarea><br><br>
+
+            <button type="submit" id="generate-btn" disabled>生成！</button>
+        </form>
+
+        <p id="loading" style="display:none; color:orange;">生成中...</p>
+    </div>
+</body>
+</html>
