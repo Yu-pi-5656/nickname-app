@@ -1,7 +1,6 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig # BitsAndBytesConfigをインポート
 import gc 
-import os # osは元々インポート済みと仮定
 
 model = None
 tokenizer = None

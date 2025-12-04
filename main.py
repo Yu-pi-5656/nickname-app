@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
-from PIL import Image
+from PIL import Image, ExifTags
 
 # ← あなたのロジックをインポート
 import rewrite
@@ -8,6 +8,34 @@ import qwen25
 import postscript
 import qwen3
 
+def fix_image_orientation(image_path):
+    try:
+        img = Image.open(image_path)
+
+        exif = img._getexif()
+        if exif is None:
+            return
+
+        # Orientation タグの番号を取得
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == "Orientation":
+                break
+
+        orientation_value = exif.get(orientation, None)
+
+        # 必要に応じて回転
+        if orientation_value == 3:
+            img = img.rotate(180, expand=True)
+        elif orientation_value == 6:
+            img = img.rotate(270, expand=True)
+        elif orientation_value == 8:
+            img = img.rotate(90, expand=True)
+
+        img.save(image_path)
+        img.close()
+
+    except Exception as e:
+        print("EXIF orientation fix error:", e)
 
 # ============================
 # Flask アプリ
@@ -112,6 +140,8 @@ def index():
         img = img.convert("RGB")
         img.thumbnail((400, 400))
         img.save(img_path)
+
+        fix_image_orientation(img_path)
 
         result = generate_nickname(img_path, name, furigana, extra_info)
 
